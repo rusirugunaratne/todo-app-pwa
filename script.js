@@ -68,9 +68,3 @@ function scheduleNotification(todo) {
 function saveTodos() {
     localStorage.setItem('todos', JSON.stringify(todoList));
 }
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js').then(() => {
-        console.log('Service Worker registered.');
-    });
-}
