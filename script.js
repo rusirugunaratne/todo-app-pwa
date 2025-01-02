@@ -6,6 +6,20 @@ document.addEventListener('DOMContentLoaded', () => {
         todoList = JSON.parse(savedTodos);
         displayTodos();
     }
+    if (!('Notification' in window)) {
+        alert('This browser does not support notifications.');
+        return;
+    }
+
+    if (Notification.permission === 'default') {
+        Notification.requestPermission().then((permission) => {
+            if (permission !== 'granted') {
+                alert('Please enable notifications to receive reminders.');
+            }
+        });
+    } else if (Notification.permission === 'denied') {
+        alert('Notifications are blocked. Please enable them in your browser settings.');
+    }
 });
 
 document.getElementById('add-todo').addEventListener('click', () => {
@@ -55,13 +69,20 @@ function deleteTodo(id) {
 }
 
 function scheduleNotification(todo) {
-    const dueTime = new Date(todo.due).getTime();
-    const now = Date.now();
+    if (Notification.permission === 'granted') {
+        const dueTime = new Date(todo.due).getTime();
+        const now = Date.now();
 
-    if (dueTime > now) {
-        setTimeout(() => {
-            new Notification(`Reminder: ${todo.text}`);
-        }, dueTime - now);
+        if (dueTime > now) {
+            setTimeout(() => {
+                new Notification('Todo Reminder', {
+                    body: todo.text,
+                    icon: 'icon.png', // Add an optional icon for the notification
+                });
+            }, dueTime - now);
+        }
+    } else {
+        alert('Notifications are not enabled. Please enable them for reminders.');
     }
 }
 
