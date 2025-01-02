@@ -49,8 +49,26 @@ function scheduleNotification(todo) {
 
     if (dueTime > now) {
         setTimeout(() => {
-            alert(`Reminder: ${todo.text}`);
+            showNotification(todo.text);
         }, dueTime - now);
+    }
+}
+
+function showNotification(message) {
+    if (Notification.permission === 'granted') {
+        new Notification('ToDo Reminder', {
+            body: message,
+            icon: 'icon.png',
+        });
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                new Notification('ToDo Reminder', {
+                    body: message,
+                    icon: 'icon.png',
+                });
+            }
+        });
     }
 }
 
