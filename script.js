@@ -49,30 +49,11 @@ function scheduleNotification(todo) {
 
     if (dueTime > now) {
         setTimeout(() => {
-            showNotification(todo.text);
+            alert(`Reminder: ${todo.text}`);
         }, dueTime - now);
     }
 }
 
-function showNotification(message) {
-    if (Notification.permission === 'granted') {
-        new Notification('ToDo Reminder', {
-            body: message,
-            icon: 'icon.png',
-        });
-    } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then((permission) => {
-            if (permission === 'granted') {
-                new Notification('ToDo Reminder', {
-                    body: message,
-                    icon: 'icon.png',
-                });
-            }
-        });
-    }
-}
-
-// Register Service Worker
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js').then(() => {
         console.log('Service Worker registered.');
